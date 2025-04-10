@@ -1,4 +1,6 @@
 import sqlite3
+import tkinter
+
 
 class database:
     def __init__(self, db='dbase.db'):
@@ -9,7 +11,7 @@ class database:
         self.table()
     
     def table(self):
-        
+
         self.cursor.execute("drop table if exists customers")
         self.cursor.execute("""
         create table if not exists customers (
