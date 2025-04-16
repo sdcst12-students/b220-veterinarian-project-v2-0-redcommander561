@@ -1,6 +1,7 @@
-import sqlite3
-import tkinter
+#make this code idiot proof
 
+
+import sqlite3
 
 class database:
     def __init__(self, db='dbase.db'):
@@ -77,48 +78,83 @@ class database:
 
     def search(self):
         field = input("Search by (fname, lname, phoneNum, email): ")
-        value = input(f"Enter the {field}: ")
+        print("\n")
+        results = []  
 
-        self.cursor.execute(f"select * from customers where {field} = ?", (value,))
-        results = self.cursor.fetchall()
+        if field in ["fname", "lname", "phoneNum", "phonenum", "email"]:
+            value = input(f"Enter the {field}: ")
+            self.cursor.execute(f"select * from customers where {field} = ?", (value,))
 
-        if results:
-            for row in results:
-                print(row)
-        else:
-            print("No customer found.")
+            results = self.cursor.fetchall()
+            if results:
+                for row in results:
+                    print(row)
+            else:
+                print("No customer found. Either you typed it in wrong, it doesn't exist or you entered a foreign symbol.\n")
 
+        if field not in ["fname", "lname", "phoneNum", "email"]:
+                print("Invalid field entered. ")
+                return
+
+        
     def edit(self):
-        self.search()
-        cus = input("Enter the ID of the customer to edit: ")
-        field = input("Which field to update (fname, lname, phoneNum, email): ")
-        new = input(f"Enter the new value for {field}: ")
+        try:
+            self.search()  
+            cus = input("Enter the ID of the customer to edit: ")
+            
+            if not cus:
+                print("Invalid ID entered. Please enter a numeric ID.")
+                return
+            cus = int(cus)
+            self.cursor.execute("select * from customers where id = ?", (cus,))
+            customer = self.cursor.fetchone()
+            if not customer:
+                print("Customer not found with that ID.")
+                return
 
-        self.cursor.execute(f"update customers set {field} = ? where id = ?", (new, cus))
-        self.connection.commit()
-        print("Customer updated successfully!")
+            field = input("Which field to update (fname, lname, phoneNum, email): ")
 
-    def close_connection(self):
+            if field not in ["fname", "lname", "phoneNum", "email"]:
+                print("Invalid field entered. ")
+                return
+
+            new = input(f"Enter the new value for {field}: ")
+
+            if not new:
+                print(f"New value for {field} cannot be empty.")
+                return
+
+            query = f"update customers set {field} = ? where id = ?"
+            self.cursor.execute(query, (new, cus))
+            self.connection.commit()
+
+            print("Customer updated successfully!")
+
+        except Exception as e:
+            print(f"Error while updating customer: {e}")
+
+
+    def close(self):
         self.connection.close()
-        print("Connection closed.")
+        print("Program Exited.")
 
     def menu(self):
         while True:
-            print("\n1. Add Customer")
-            print("2. Search Customer")
-            print("3. Edit Customer")
-            print("4. Exit")
+            print("\n1. Add Customer (type 1)")
+            print("2. Search Customer (type 2)")
+            print("3. Edit Customer (type 3)")
+            print("4. Exit (type 4)")
 
             choice = input("Choose an option: ")
 
-            if choice == "1":
+            if choice == "1" or choice == "Add customer" or choice == "add customer":
                 self.add()
-            elif choice == "2":
+            elif choice == "2" or choice == "Search customer" or choice == "search customer":
                 self.search()
-            elif choice == "3":
+            elif choice == "3" or choice == "Edit customer" or choice == "edit customer":
                 self.edit()
-            elif choice == "4":
-                self.close_connection()
+            elif choice == "4" or choice == "exit" or choice == "Exit":
+                self.close()
                 break
             else:
                 print("Invalid option, try again, with only 1, 2, 3, or 4")
