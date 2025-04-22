@@ -1,5 +1,3 @@
-#make this code idiot proof
-
 
 import sqlite3
 
@@ -163,3 +161,5 @@ class database:
 if __name__ == "__main__":
     db = database()
     db.menu()
+
+
