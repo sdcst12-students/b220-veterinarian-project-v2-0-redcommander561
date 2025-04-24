@@ -1,3 +1,5 @@
+#display the data neater, and not just as lists, maybe as a string or a dictionary
+
 import sqlite3
 
 class database:
@@ -76,22 +78,33 @@ class database:
     def search(self):
         field = input("Search by (fname, lname, phoneNum, email): ")
         print("\n")
-        results = []  
-
-        if field in ["fname", "lname", "phoneNum", "phonenum", "email"]:
-            value = input(f"Enter the {field}: ")
-            self.cursor.execute(f"select * from customers where {field} = ?", (value,))
-
-            results = self.cursor.fetchall()
-            if results:
-                for row in results:
-                    print(row)
-            else:
-                print("No customer found. Either you typed it in wrong, it doesn't exist or you entered a foreign symbol.\n")
 
         if field not in ["fname", "lname", "phoneNum", "email"]:
-                print("Invalid field entered. ")
-                return
+            print("Invalid field entered.")
+            return
+
+        value = input(f"Enter the {field}: ")
+        self.cursor.execute(f"select * from customers where {field} = ?", (value,))
+        results = self.cursor.fetchall()
+
+        if not results:
+            print("No customer found.\n")
+            return
+
+        for row in results:
+            print(f""" 
+            ID: {row[0]}
+            First Name: {row[1]}
+            Last Name: {row[2]}
+            Phone: {row[3]}
+            Email: {row[4]}
+            Address: {row[5]}
+            City: {row[6]}
+            Postal Code: {row[7]}
+            ------------------------------
+               
+               """)
+
 
     def edit(self):
         try:
@@ -131,7 +144,7 @@ class database:
 
     def close(self):
         self.connection.close()
-        print("Program Exited.")
+        print("Program Closed.")
 
     def menu(self):
         while True:
