@@ -1,4 +1,3 @@
-
 import sqlite3
 
 class database:
@@ -94,7 +93,6 @@ class database:
                 print("Invalid field entered. ")
                 return
 
-        
     def edit(self):
         try:
             self.search()  
@@ -131,7 +129,6 @@ class database:
         except Exception as e:
             print(f"Error while updating customer: {e}")
 
-
     def close(self):
         self.connection.close()
         print("Program Exited.")
@@ -161,5 +158,4 @@ class database:
 if __name__ == "__main__":
     db = database()
     db.menu()
-
 
