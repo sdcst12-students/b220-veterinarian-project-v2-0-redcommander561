@@ -1,4 +1,3 @@
-#put it back to normal where edit was using search to find the customer to edit.
 
 import sqlite3
 
@@ -72,7 +71,7 @@ class database:
 
         self.cursor.execute(query)
         for i in data:
-            print(f"\n{i}")
+            print(f"{i}")
         self.connection.commit()
 
     def search(self):
