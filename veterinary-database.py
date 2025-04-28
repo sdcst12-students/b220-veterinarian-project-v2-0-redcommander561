@@ -1,4 +1,4 @@
-#display the data neater, and not just as lists, maybe as a string or a dictionary
+#put it back to normal where edit was using search to find the customer to edit.
 
 import sqlite3
 
@@ -72,7 +72,7 @@ class database:
 
         self.cursor.execute(query)
         for i in data:
-            print(i)
+            print(f"\n{i}")
         self.connection.commit()
 
     def search(self):
@@ -110,7 +110,7 @@ class database:
         try:
             self.search()  
             cus = input("Enter the ID of the customer to edit: ")
-            
+                
             if not cus:
                 print("Invalid ID entered. Please enter a numeric ID.")
                 return
