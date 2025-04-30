@@ -1,4 +1,4 @@
-#add it so if self.search fails and theres no customer it wont let you enter the id to edit or edit at all
+#fix it so if theres no customer found, the edit function will not run. but if there is, the edit function will run
 
 import sqlite3
 
@@ -81,7 +81,7 @@ class database:
 
         if field not in ["fname", "lname", "phoneNum", "email"]:
             print("Invalid field entered.")
-            return
+            return []
 
         value = input(f"Enter the {field}: ")
         self.cursor.execute(f"select * from customers where {field} = ?", (value,))
@@ -89,7 +89,7 @@ class database:
 
         if not results:
             print("No customer found.\n")
-            return
+            return []
 
         for row in results:
             print(f""" 
@@ -101,16 +101,17 @@ class database:
             Address: {row[5]}
             City: {row[6]}
             Postal Code: {row[7]}
-            ------------------------------
-               
-               """)
+            ------------------------------ 
+            """)
+
+        return results
 
 
     def edit(self):
         try:
-            if not self.search():
-                print("Edit cancelled due to no matching customer.")
-                return
+            results = self.search()
+            if not results:
+                return  
 
             cus = input("Enter the ID of the customer to edit: ")
 
