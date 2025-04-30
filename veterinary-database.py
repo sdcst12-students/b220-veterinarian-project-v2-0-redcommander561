@@ -1,3 +1,4 @@
+#add it so if self.search fails and theres no customer it wont let you enter the id to edit or edit at all
 
 import sqlite3
 
@@ -107,15 +108,20 @@ class database:
 
     def edit(self):
         try:
-            self.search()  
+            if not self.search():
+                print("Edit cancelled due to no matching customer.")
+                return
+
             cus = input("Enter the ID of the customer to edit: ")
-                
-            if not cus:
+
+            if not cus.isdigit():
                 print("Invalid ID entered. Please enter a numeric ID.")
                 return
+
             cus = int(cus)
             self.cursor.execute("select * from customers where id = ?", (cus,))
             customer = self.cursor.fetchone()
+
             if not customer:
                 print("Customer not found with that ID.")
                 return
@@ -123,7 +129,7 @@ class database:
             field = input("Which field to update (fname, lname, phoneNum, email): ")
 
             if field not in ["fname", "lname", "phoneNum", "email"]:
-                print("Invalid field entered. ")
+                print("Invalid field entered.")
                 return
 
             new = input(f"Enter the new value for {field}: ")
