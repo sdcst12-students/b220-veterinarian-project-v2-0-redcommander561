@@ -1,4 +1,4 @@
-#fix it so if theres no customer found, the edit function will not run. but if there is, the edit function will run
+
 
 import sqlite3
 
@@ -103,22 +103,21 @@ class database:
             Postal Code: {row[7]}
             ------------------------------ 
             """)
-
+    
         return results
-
-
+    
     def edit(self):
         try:
             results = self.search()
             if not results:
                 return  
-
+    
             cus = input("Enter the ID of the customer to edit: ")
 
             if not cus.isdigit():
                 print("Invalid ID entered. Please enter a numeric ID.")
                 return
-
+    
             cus = int(cus)
             self.cursor.execute("select * from customers where id = ?", (cus,))
             customer = self.cursor.fetchone()
